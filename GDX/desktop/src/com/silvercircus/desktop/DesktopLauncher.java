@@ -2,7 +2,7 @@ package com.silvercircus.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.silvercircus.Game;
+import com.silvercarnival.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
