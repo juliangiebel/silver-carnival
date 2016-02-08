@@ -15,6 +15,7 @@ import com.silvercarnival.entitys.components.InputComponent;
 import com.silvercarnival.entitys.components.InteractionComponent;
 import com.silvercarnival.entitys.components.PositionComponent;
 import com.silvercarnival.entitys.components.SensorComponent;
+import com.silvercarnival.entitys.components.TriggerComponent;
 
 /**
  * @author Julian Giebel
@@ -37,7 +38,7 @@ public class ActionSystem extends IteratingSystem implements QueryCallback {
 		 */
 		@SuppressWarnings("unchecked")
 		public ActionSystem() {
-			super(Family.all(PositionComponent.class, InputComponent.class, SensorComponent.class).get());
+			super(Family.all(PositionComponent.class, InputComponent.class, SensorComponent.class).exclude(TriggerComponent.class).get());
 		}
 
 

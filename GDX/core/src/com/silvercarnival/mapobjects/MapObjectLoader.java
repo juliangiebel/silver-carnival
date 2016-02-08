@@ -1,13 +1,15 @@
 /**
  * 
  */
-package com.silvercarnival;
+package com.silvercarnival.mapobjects;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.XmlReader;
@@ -22,10 +24,13 @@ public final class MapObjectLoader {
 	private HashMap<String, Vector<Element>> objects;
 	private HashMap<String, ObjectFactory>   factorys;
 	private Array<Element> unSortedObjects;
+	private Engine engine;
 	
-	public MapObjectLoader(final String filename)
+	public MapObjectLoader(final String filename, Engine _engine)
 	{
 		String type;
+		
+		this.engine = _engine;
 		
 		try {
 			unSortedObjects = new XmlReader().parse(Gdx.files.internal("assets/"+filename)).getChildrenByNameRecursively("object");
@@ -60,13 +65,15 @@ public final class MapObjectLoader {
 	{
 		Iterator<String> ikeys = objects.keySet().iterator();
 		String currentType;
+		Entity bEntity;
 		while(ikeys.hasNext())
 		{
 			currentType = ikeys.next();
 			Iterator<Element> iobj = objects.get(currentType).iterator();
 			while(iobj.hasNext())
 			{
-				factorys.get(currentType).generate(iobj.next());
+				bEntity = factorys.get(currentType).generate(iobj.next());
+				engine.addEntity(bEntity);
 			}
 		}
 	}

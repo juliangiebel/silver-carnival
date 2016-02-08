@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.silvercarnival;
+package com.silvercarnival.mapobjects;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.XmlReader.Element;
