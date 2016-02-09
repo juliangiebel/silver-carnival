@@ -66,6 +66,7 @@ public final class MapObjectLoader {
 		Iterator<String> ikeys = objects.keySet().iterator();
 		String currentType;
 		Entity bEntity;
+		
 		while(ikeys.hasNext())
 		{
 			currentType = ikeys.next();

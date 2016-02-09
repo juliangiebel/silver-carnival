@@ -60,6 +60,13 @@ public class TriggerFactory implements ObjectFactory {
 			case "delay":
 				delay = property.getInt("delay");
 				break;
+			case "intdata":
+				
+			break;
+			case "strdata":
+				break;
+			case "booldata":
+				break;
 			//FIXME implement message data in a reasonable way.
 			}
 		}
