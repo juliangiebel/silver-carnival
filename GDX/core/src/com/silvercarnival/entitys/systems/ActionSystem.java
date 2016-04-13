@@ -57,7 +57,7 @@ public class ActionSystem extends IteratingSystem implements QueryCallback {
 				float x = pm.get(entity).position.x, y = pm.get(entity).position.y;
 				
 				float lx, ly , ux, uy;
-				//Calculating the area for an AABB Query
+				
 				lx = x - (sm.get(entity).width / 2);
 				ly = y;
 				ux = x + (sm.get(entity).width / 2);
@@ -86,7 +86,7 @@ public class ActionSystem extends IteratingSystem implements QueryCallback {
 			}else return true;
 			
 			
-			if(!sm.get(current).isActive& inm.has(detected))
+			if(!sm.get(current).isActive & inm.has(detected))
 			{
 				sm.get(current).firstIF = detected;
 				sm.get(current).isActive = true;

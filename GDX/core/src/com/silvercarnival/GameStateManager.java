@@ -17,7 +17,7 @@ public final class GameStateManager {
 	public static void resize(float f, float g) {
 		
 		if(states.isEmpty()) return;
-		states.peek().resize(f, g);
+		states.peek().resize(f, g); 
 	}
 
 	public static void init() {

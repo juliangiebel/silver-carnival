@@ -29,22 +29,30 @@ public final class MapObjectLoader {
 	public MapObjectLoader(final String filename, Engine _engine)
 	{
 		String type;
+		objects  = new HashMap<String, Vector<Element>>();
+		factorys = new HashMap<String, ObjectFactory>();
+		
 		
 		this.engine = _engine;
 		
+		
 		try {
 			unSortedObjects = new XmlReader().parse(Gdx.files.internal("assets/"+filename)).getChildrenByNameRecursively("object");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		if(unSortedObjects != null&&unSortedObjects.size > 0)
 		{
+			
 			for(Element object : unSortedObjects)
 			{
-				type = object.getAttribute("Type", null);
+				type = object.getAttribute("type", null);
+				System.out.println("object <"+ type+">");
 				if(type != null)
 				{
+					System.out.println("adding new object.");
 					if(objects.containsKey(type))
 					{
 						objects.get(type).add(object);
@@ -73,7 +81,10 @@ public final class MapObjectLoader {
 			Iterator<Element> iobj = objects.get(currentType).iterator();
 			while(iobj.hasNext())
 			{
-				bEntity = factorys.get(currentType).generate(iobj.next());
+				ObjectFactory f = factorys.get(currentType);
+				if(f == null) {System.out.println("null"); break; }
+				System.out.println("Factory found:");
+				bEntity = f.generate(iobj.next());
 				engine.addEntity(bEntity);
 			}
 		}

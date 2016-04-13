@@ -21,7 +21,7 @@ public final class EntityManager {
 	 */
 	public EntityManager() {
 		
-		if(engine == null)engine = new Engine(); build();
+		if(engine == null){engine = new Engine(); build();}
 		
 		
 	}
