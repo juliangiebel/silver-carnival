@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Json;
 import com.silvercarnival.entitys.components.BodyComponent;
 import com.silvercarnival.entitys.components.DebugRenderTag;
 import com.silvercarnival.entitys.components.PositionComponent;
@@ -36,6 +37,8 @@ public class Game extends ApplicationAdapter {
 	
 	@Override
 	public void create () {
+		
+		Json json = new Json();
 		
 		engine = new Engine();
 		
@@ -72,6 +75,8 @@ public class Game extends ApplicationAdapter {
 		engine.addEntity(te);
 		
 		camera.position.set(new Vector2(38,118), 1);
+		
+		System.out.println(json.prettyPrint(engine.getEntities().first().getComponents().first()));
 	}
 
 	@Override

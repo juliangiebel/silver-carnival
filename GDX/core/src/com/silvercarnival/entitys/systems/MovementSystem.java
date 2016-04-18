@@ -45,6 +45,7 @@ public class MovementSystem extends IteratingSystem {
 		//TODO Add lag compensation.
 		Vector2 vel = vm.get(entity).velocity;
 		
+		
 		bm.get(entity).body.applyForceToCenter(vel, true);
 		pm.get(entity).position = bm.get(entity).body.getWorldCenter();
 		

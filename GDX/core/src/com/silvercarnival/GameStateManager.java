@@ -67,6 +67,11 @@ public final class GameStateManager {
 		pushState(state);
 	}
 	
+	public static SpriteBatch getBatch()
+	{
+		return batch;
+	}
+	
 	public static void deconstruct()
 	{
 		while(!states.isEmpty())

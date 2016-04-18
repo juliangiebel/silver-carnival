@@ -79,7 +79,7 @@ public class TriggerFactory implements ObjectFactory {
 			}
 		}
 		
-		entity.add(new PositionComponent(new Vector2(e.getInt("x"),e.getInt("y"))));
+		entity.add(new PositionComponent(new Vector2(e.getFloat("x"),e.getFloat("y"))));
 		entity.add(new SensorComponent(e.getInt("width"), e.getFloat("height"), world));
 		entity.add(new TriggerComponent(type, delay, data));
 		entity.add(new DebugRenderTag());//for debugging

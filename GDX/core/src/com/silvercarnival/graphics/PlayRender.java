@@ -44,11 +44,6 @@ public class PlayRender {
 		mapRenderer.render();
 	}
 	
-	public static void nomapRender(SpriteBatch batch, OrthographicCamera camera, Box2DDebugRenderer b2dr, World world)
-	{
-		
-		
-	}
 	
 	public static int getHeight()
 	{
