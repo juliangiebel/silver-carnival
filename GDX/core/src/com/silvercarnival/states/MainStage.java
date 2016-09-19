@@ -34,10 +34,15 @@ import com.silvercarnival.utils.TiledUtil;
  */
 public final class MainStage extends State implements Telegraph {
 
-	public static String currentMap = null;
-	public static final int nextMapMsg = 32;
+	public  static String currentMap = null;
+	public  static final int nextMapMsg = 32;
 	private static final int[] backgroundLayers = {0};
 	//private static final int[] foregroudLayers = {0};
+	
+	private boolean isActive = true;
+	
+	private boolean chMap = false;
+	private String nextMap = null;
 	
 	private Engine engine;
 	
@@ -61,6 +66,17 @@ public final class MainStage extends State implements Telegraph {
 	@Override
 	public void update(float deltaTime) {
 		engine.update(deltaTime);
+		
+		if(chMap)
+		{
+			if(nextMap != null)
+			{
+				changeMap(nextMap);
+			}else{
+				chMap = false;
+				System.out.println("can't change to empty space!");
+			}
+		}
 
 	}
 
@@ -69,16 +85,28 @@ public final class MainStage extends State implements Telegraph {
 	 */
 	@Override
 	public void render(SpriteBatch batch) {
+		
 		mapRender.setView(camera);
-		batch.setProjectionMatrix(camera.combined);
+		batch.setProjectionMatrix(this.camera.combined);
 		Gdx.gl20.glClearColor(0,0,0,0);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT|GL20.GL_DEPTH_BUFFER_BIT);
+		
 		
 		mapRender.render(backgroundLayers);
 		
 		
 	}
-
+	
+	@Override
+	public void pause(){
+		isActive = false;
+	}
+	
+	@Override
+	public void resume() {
+		isActive = true;
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.silvercircus.states.State#dispose()
 	 */
@@ -98,14 +126,19 @@ public final class MainStage extends State implements Telegraph {
 
 	@Override
 	public boolean handleMessage(Telegram msg) {
+		//--Added a local flag for changing the map and a return true instead of break
+		//----Wish i could find a better solution.
 		
-		switch(msg.message)
+		if(!isActive) return false;
+		
+		switch(msg.message) 
 		{
 		
 		case nextMapMsg:
 			if(msg.extraInfo.getClass() != String.class) return false;
-			changeMap((String)msg.extraInfo);
-			break;
+			nextMap = (String)msg.extraInfo;
+			chMap = true;
+			return true;
 		
 		}
 		
@@ -114,6 +147,8 @@ public final class MainStage extends State implements Telegraph {
 	
 	private void changeMap(String mapname)
 	{
+		
+		System.out.println("changed Map to:" + mapname);
 		ImmutableArray<Entity> group = engine.getEntitiesFor(Family.all(PlayerTag.class,FollowerTag.class).get());
 		engine.removeAllEntities();
 		Iterator<Entity> iter = group.iterator();
@@ -121,12 +156,12 @@ public final class MainStage extends State implements Telegraph {
 		{
 			engine.addEntity(iter.next());
 		}
-			
-		TiledMap tmap = new TmxMapLoader().load(mapname);
-		TiledUtil.parseTiledObjectLayer(world, tmap.getLayers().get(0).getObjects());
-		TiledUtil.parseTiledTileCollision(world, (TiledMapTileLayer) tmap.getLayers().get(0), mapname);
-		
 		World tworld = new World(new Vector2(0,0), true);
+		TiledMap tmap = new TmxMapLoader().load(mapname);
+		TiledUtil.parseTiledObjectLayer(tworld, tmap.getLayers().get(0).getObjects());
+		TiledUtil.parseTiledTileCollision(tworld, (TiledMapTileLayer) tmap.getLayers().get(0), mapname);
+		
+		
 		
 		MapObjectLoader loader = new MapObjectLoader(mapname, engine);
 		loader.addFactory(new TriggerFactory(tworld));
@@ -135,5 +170,7 @@ public final class MainStage extends State implements Telegraph {
 		GameStateManager.swapStates(new MainStage(camera,engine,tmap,tworld));
 		
 	}
+
+	
 
 }

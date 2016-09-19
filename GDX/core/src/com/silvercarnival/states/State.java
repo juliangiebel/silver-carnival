@@ -24,6 +24,10 @@ public abstract class State {
 	public abstract void update(float deltaTime);
 
 	public abstract void render(SpriteBatch batch);
+	
+	public abstract void pause();
+	
+	public abstract void resume();
 
 	public abstract void dispose();
 }

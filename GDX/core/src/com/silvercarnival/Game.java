@@ -5,10 +5,14 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -22,22 +26,39 @@ import com.silvercarnival.entitys.systems.DebugRenderSystem;
 import com.silvercarnival.entitys.systems.TriggerSystem;
 import com.silvercarnival.mapobjects.MapObjectLoader;
 import com.silvercarnival.mapobjects.TriggerFactory;
+import com.silvercarnival.states.MainStage;
 import com.silvercarnival.utils.BodyBuilder;
+import com.silvercarnival.utils.TiledUtil;
 
 public class Game extends ApplicationAdapter {
 
-
+	private static OrthographicCamera camera;
+	/*
 	private MapObjectLoader loader;
 	private Engine engine;
 	private World world;
-	private OrthographicCamera camera;
+	
 	private DebugRenderSystem dbs;
 	private Box2DDebugRenderer dbg;
 	private Body pb;
+	*/
 	
+	private int tsti = 0;
+	
+	GameStateManager manager;
+	
+	@SuppressWarnings("static-access")
 	@Override
 	public void create () {
 		
+		manager = new GameStateManager();
+		manager.init();
+		
+		camera = new OrthographicCamera(100f,100f);
+		camera.position.set(new Vector2(38,118), 1);
+		camera.update();
+		manager.pushState(buildStage("run.tmx"));
+		/*
 		Json json = new Json();
 		
 		engine = new Engine();
@@ -46,9 +67,7 @@ public class Game extends ApplicationAdapter {
 		
 		world = new World(new Vector2(10,0), false);
 		
-		camera = new OrthographicCamera(100f,100f);
 		
-		camera.update();
 		
 		dbs = new DebugRenderSystem();
 		dbg = new Box2DDebugRenderer();
@@ -74,15 +93,16 @@ public class Game extends ApplicationAdapter {
 		
 		engine.addEntity(te);
 		
-		camera.position.set(new Vector2(38,118), 1);
+		
 		
 		System.out.println(json.prettyPrint(engine.getEntities().first().getComponents().first()));
+		*/
 	}
 
 	@Override
 	public void render () {
 		
-		Gdx.gl20.glClearColor(0,0,0,0);
+		/*Gdx.gl20.glClearColor(0,0,0,0);
 		Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT|GL20.GL_DEPTH_BUFFER_BIT);
 		
 		dbg.render(world, camera.combined);
@@ -91,9 +111,33 @@ public class Game extends ApplicationAdapter {
 
 		world.step((1/20), 8, 3);
 		
-		dbs.render(camera);
+		dbs.render(camera);*/
+		
+		GameStateManager.update(1f);
+		GameStateManager.render();
+		
+		if(tsti <= 3) tsti++;
+		if(tsti == 3)
+		{
+			MessageManager.getInstance().dispatchMessage(MainStage.nextMapMsg, "desert.tmx");
+		}
+		
+		
+	}
+	
+	private static MainStage buildStage(String mapname)
+	{
+		Engine _engine = new Engine();
+		World tworld = new World(new Vector2(0,0), true);
+		TiledMap tmap = new TmxMapLoader().load(mapname);
+		TiledUtil.parseTiledObjectLayer(tworld, tmap.getLayers().get(0).getObjects());
+		TiledUtil.parseTiledTileCollision(tworld, (TiledMapTileLayer) tmap.getLayers().get(0), mapname);
 		
 		
 		
+		MapObjectLoader loader = new MapObjectLoader(mapname,  _engine);
+		loader.addFactory(new TriggerFactory(tworld));
+		loader.buildObjects();
+		return new MainStage(camera, _engine, tmap, tworld );
 	}
 }

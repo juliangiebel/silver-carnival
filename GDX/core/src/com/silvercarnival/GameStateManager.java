@@ -47,7 +47,7 @@ public final class GameStateManager {
 	
 	public static void pushState(State state)
 	{
-		
+		if(!states.isEmpty()) states.peek().pause();
 		states.push(state);
 		state.create();
 		
@@ -58,6 +58,8 @@ public final class GameStateManager {
 		if(states.isEmpty()) return;
 		dispose();
 		states.pop();
+		if(states.isEmpty()) return;
+		states.peek().resume();
 		
 	}
 	

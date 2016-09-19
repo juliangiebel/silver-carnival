@@ -97,7 +97,7 @@ public class CameraStyles {
 	
 	public static boolean searchFocalPoints(Camera camera, Array<Vector2> focalPoints, Vector2 target,float threshold)
 	{
-		//TODO Optimize for nearest not first to be smaller than threshold.
+		//FIXME Optimize for nearest not first to be smaller than threshold.
 		for(Vector2 point : focalPoints)
 		{
 			
